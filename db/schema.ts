@@ -1,14 +1,14 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, timestamp, varchar, uniqueIndex } from "drizzle-orm/pg-core";
 
-export const registrations = sqliteTable(
+export const registrations = pgTable(
   "registrations",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
-    fullName: text("full_name").notNull(),
-    schoolId: text("school_id").notNull(),
-    schoolEmail: text("school_email").notNull(),
-    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+    id: serial("id").primaryKey(),
+    fullName: varchar("full_name", { length: 80 }).notNull(),
+    schoolId: varchar("school_id", { length: 12 }).notNull(),
+    schoolEmail: varchar("school_email", { length: 120 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(sql`now()`),
   },
   (table) => [
     uniqueIndex("idx_registrations_school_id").on(table.schoolId),

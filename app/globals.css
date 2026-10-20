@@ -1,7 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
 :root{--ink:#080a09;--paper:#f2f3ef;--white:#fff;--blue:#365cff;--ice:#cbd6ff;--line:rgba(8,10,9,.18);--muted:#696e6b;--pad:clamp(20px,4vw,64px);--radius:18px}
 *{box-sizing:border-box}

@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "../../../../db";
 import { registrations } from "../../../../db/schema";
-import { getChatGPTUser, isSiteOwner } from "../../../chatgpt-auth";
+import { isAdminSession } from "../../../admin/admin-auth";
 
 export async function DELETE(request: Request) {
-  const user = await getChatGPTUser();
-  if (!user) return Response.json({ error: "Sign in is required." }, { status: 401 });
-  if (!isSiteOwner(user)) return Response.json({ error: "You do not have permission to change this roster." }, { status: 403 });
+  if (!(await isAdminSession())) {
+    return Response.json({ error: "Admin sign-in is required." }, { status: 401 });
+  }
 
   let body: unknown;
   try {

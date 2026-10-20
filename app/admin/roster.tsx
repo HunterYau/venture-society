@@ -7,7 +7,7 @@ export type Registration = {
   fullName: string;
   schoolId: string;
   schoolEmail: string;
-  createdAt: string;
+  createdAt: string | Date;
 };
 
 export function Roster({ rows }: { rows: Registration[] }) {
@@ -41,7 +41,7 @@ export function Roster({ rows }: { rows: Registration[] }) {
       {error && <div className="admin-error" role="alert">{error}</div>}
       <table className="registration-table">
         <thead><tr><th>Name</th><th>School ID</th><th>School email</th><th>Submitted</th><th><span className="sr-only">Actions</span></th></tr></thead>
-        <tbody>{rows.map((row)=><tr key={row.id}><td>{row.fullName}</td><td>{row.schoolId}</td><td>{row.schoolEmail}</td><td>{new Date(`${row.createdAt}Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td><td className="registration-actions"><button type="button" className="delete-registration" disabled={deletingId !== null} onClick={() => removeRegistration(row)}>{deletingId === row.id ? "Removing…" : "Delete"}</button></td></tr>)}</tbody>
+        <tbody>{rows.map((row)=><tr key={row.id}><td>{row.fullName}</td><td>{row.schoolId}</td><td>{row.schoolEmail}</td><td>{new Date(row.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td><td className="registration-actions"><button type="button" className="delete-registration" disabled={deletingId !== null} onClick={() => removeRegistration(row)}>{deletingId === row.id ? "Removing…" : "Delete"}</button></td></tr>)}</tbody>
       </table>
     </>
   );

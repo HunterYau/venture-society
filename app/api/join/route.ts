@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
-    if (message.includes("UNIQUE constraint failed")) {
+    if (message.includes("duplicate key") || message.includes("unique")) {
       return Response.json({ error: "That school ID or email is already registered." }, { status: 409 });
     }
     return Response.json({ error: "Registration is temporarily unavailable. Please try again." }, { status: 500 });

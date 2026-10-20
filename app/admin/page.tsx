@@ -1,29 +1,27 @@
 import { desc } from "drizzle-orm";
-import { notFound } from "next/navigation";
 import { getDb } from "../../db";
 import { registrations } from "../../db/schema";
-import { chatGPTSignInPath, chatGPTSignOutPath, getChatGPTUser, isSiteOwner } from "../chatgpt-auth";
 import { SiteNav } from "../site-shell";
+import { isAdminSession } from "./admin-auth";
+import { AdminSignIn } from "./admin-sign-in";
+import { AdminSignOut } from "./admin-sign-out";
 import { Roster } from "./roster";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const user = await getChatGPTUser();
-  if (!user) {
+  if (!(await isAdminSession())) {
     return (
       <div className="admin-page">
         <SiteNav dark />
         <main className="admin-wrap">
           <div className="kicker" style={{ color: "var(--ice)" }}>Protected roster</div>
-          <div className="admin-head"><div><h1>President<br />access.</h1><p className="admin-note">Sign in with the ChatGPT account that owns this website to view student registrations.</p></div></div>
-          <a className="round-button primary" href={chatGPTSignInPath("/admin")} target="_top">Sign in with ChatGPT <span>↗</span></a>
+          <div className="admin-head"><div><h1>President<br />access.</h1><p className="admin-note">Use the private administrator password to view student registrations.</p></div></div>
+          <AdminSignIn />
         </main>
       </div>
     );
   }
-  if (!isSiteOwner(user)) notFound();
-
   const rows = await getDb().select().from(registrations).orderBy(desc(registrations.createdAt), desc(registrations.id));
   return (
     <div className="admin-page">
@@ -31,7 +29,7 @@ export default async function AdminPage() {
       <main className="admin-wrap">
         <div className="admin-head"><div><div className="kicker" style={{ color: "var(--ice)" }}>Private / President only</div><h1>Join<br />roster.</h1><p className="admin-note">Only the website owner can open this page. New registrations appear here automatically.</p></div><div className="admin-count">{rows.length}<small>Registered students</small></div></div>
         <Roster rows={rows} />
-        <a href={chatGPTSignOutPath("/")} target="_top" className="round-button" style={{ marginTop: 40 }}>Sign out</a>
+        <AdminSignOut />
       </main>
     </div>
   );
